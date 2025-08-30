@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Công cụ tính điểm GPA</title>
+    <style>
+        /* CSS để tạo kiểu cho trang web */
+        @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700&display=swap');
+
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background: linear-gradient(135deg, #005a9e 0%, #ff2d55 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: rgba(255,255,255,0.95);
+            padding: 36px 30px 30px 30px;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(0, 90, 158, 0.15), 0 2px 8px rgba(255,45,85,0.08);
+            width: 95%;
+            max-width: 480px;
+            text-align: center;
+            position: relative;
+        }
+
+        h1 {
+            color: #ff2d55;
+            margin-bottom: 18px;
+            font-size: 2.1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 8px rgba(0,90,158,0.08);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #005a9e;
+            font-weight: 600;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid #005a9e;
+            border-radius: 7px;
+            box-sizing: border-box;
+            font-size: 16px;
+            background: #f7faff;
+            transition: border-color 0.2s;
+        }
+        input[type="number"]:focus {
+            border-color: #ff2d55;
+            outline: none;
+        }
+
+        button {
+            background: linear-gradient(90deg, #005a9e 0%, #ff2d55 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 7px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: box-shadow 0.2s, transform 0.2s;
+            width: 100%;
+            box-shadow: 0 2px 8px rgba(0,90,158,0.08);
+        }
+        button:hover {
+            box-shadow: 0 4px 16px rgba(255,45,85,0.15);
+            transform: translateY(-2px) scale(1.03);
+        }
+
+        #result-area {
+            margin-top: 30px;
+            padding: 22px 18px;
+            background: linear-gradient(90deg, #e6f7ff 0%, #ffe6ec 100%);
+            border-radius: 8px;
+            text-align: left;
+            line-height: 1.7;
+            display: none;
+            box-shadow: 0 2px 8px rgba(0,90,158,0.07);
+            border: 1.5px solid #ff2d55;
+        }
+        
+        .result-message {
+            margin-top: 15px;
+            font-style: italic;
+            color: #ff2d55;
+            font-weight: 500;
+        }
+
+        .club-logo {
+            display: block;
+            margin: 0 auto 18px auto;
+            max-width: 120px;
+            height: auto;
+            border-radius: 50%;
+            box-shadow: 0 2px 12px rgba(255,45,85,0.12), 0 1px 4px rgba(0,90,158,0.10);
+            border: 3px solid #ff2d55;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <img src="logo.png" alt="Logo CLB" class="club-logo">
+        <h1>Công cụ tính điểm GPA</h1>
+
+        <div class="input-group">
+            <label for="correct-answers">Nhập số câu đúng:</label>
+            <input type="number" id="correct-answers" placeholder="Ví dụ: 80">
+        </div>
+
+        <div class="input-group">
+            <label for="total-questions">Nhập tổng số câu:</label>
+            <input type="number" id="total-questions" placeholder="Ví dụ: 100">
+        </div>
+
+        <button onclick="calculateGPA()">Xem kết quả</button>
+
+        <div id="result-area">
+            </div>
+    </div>
+
+    <script>
+        // JavaScript để thực hiện logic tính toán
+        function calculateGPA() {
+            // Bước 1: Lấy dữ liệu từ ô nhập liệu
+            const x = parseFloat(document.getElementById('correct-answers').value);
+            const y = parseFloat(document.getElementById('total-questions').value);
+            const resultArea = document.getElementById('result-area');
+
+            // Bước 2: Kiểm tra dữ liệu đầu vào
+            if (isNaN(x) || isNaN(y) || y <= 0 || x < 0 || x > y) {
+                resultArea.style.display = 'block';
+                resultArea.innerHTML = '<p style="color: red;">Vui lòng nhập số liệu hợp lệ! Số câu đúng phải nhỏ hơn hoặc bằng tổng số câu.</p>';
+                return; // Dừng hàm nếu dữ liệu không hợp lệ
+            }
+
+            // Bước 3: Tính điểm hệ 10 dựa trên công thức
+            let score10;
+            const n = x / y;
+
+            if (n < 0.5) {
+                score10 = (8 * x) / y; // [cite: 14]
+            } else if (n === 0.5) {
+                score10 = 4; // [cite: 15]
+            } else if (n > 0.5 && n < 0.6) {
+                score10 = 4 + (10 * (x - 0.5 * y)) / y; // [cite: 16]
+            } else if (n === 0.6) {
+                score10 = 5; // [cite: 17]
+            } else { // n > 0.6
+                score10 = 5 + (12.5 * (x - 0.6 * y)) / y; // [cite: 18]
+            }
+
+            // Làm tròn điểm hệ 10 đến 2 chữ số thập phân
+            score10 = parseFloat(score10.toFixed(2));
+
+            // Bước 4: Quy đổi sang điểm hệ 4, điểm chữ và lời nhắn
+            let score4;
+            let letterGrade;
+            let message;
+
+            if (score10 >= 9.5) {
+                score4 = 4.0;
+                letterGrade = 'A+';
+                message = "Xuất sắc! Một kết quả thật đáng ngưỡng mộ. Hãy tiếp tục phát huy nhé, bạn là niềm tự hào của chúng tôi!"; // [cite: 32]
+            } else if (score10 >= 8.5) {
+                score4 = 4.0;
+                letterGrade = 'A';
+                message = "Tuyệt vời! Bạn đã làm rất tốt. Sự chăm chỉ của bạn đã được đền đáp xứng đáng!"; // [cite: 33]
+            } else if (score10 >= 8.0) {
+                score4 = 3.5;
+                letterGrade = 'B+';
+                message = "Khá lắm! Một kết quả tốt cho thấy sự nỗ lực của bạn. Cố gắng thêm một chút nữa để đạt được kết quả cao hơn nhé!"; // [cite: 34]
+            } else if (score10 >= 7.0) {
+                score4 = 3.0;
+                letterGrade = 'B';
+                message = "Ổn rồi! Bạn đã nắm vững kiến thức ở mức khá. Hãy xem lại những phần còn yếu để cải thiện trong lần tới."; // [cite: 35]
+            } else if (score10 >= 6.5) {
+                score4 = 2.5;
+                letterGrade = 'C+';
+                message = "Bạn đã qua môn! Đây là một cột mốc quan trọng. Hãy coi đây là động lực để tập trung và bứt phá hơn trong tương lai."; // [cite: 36]
+            } else if (score10 >= 5.5) {
+                score4 = 2.0;
+                letterGrade = 'C';
+                message = "Bạn đã qua môn! Đây là một cột mốc quan trọng. Hãy coi đây là động lực để tập trung và bứt phá hơn trong tương lai."; // [cite: 36]
+            } else if (score10 >= 5.0) {
+                score4 = 1.5;
+                letterGrade = 'D+';
+                message = "Suýt soát rồi, nhưng vẫn qua môn! Môn học này có vẻ khá thử thách. Đừng ngần ngại tìm kiếm sự giúp đỡ từ bạn bè hoặc các anh chị nhé."; // [cite: 37]
+            } else if (score10 >= 4.0) {
+                score4 = 1.0;
+                letterGrade = 'D';
+                message = "Suýt soát rồi, nhưng vẫn qua môn! Môn học này có vẻ khá thử thách. Đừng ngần ngại tìm kiếm sự giúp đỡ từ bạn bè hoặc các anh chị nhé."; // [cite: 37]
+            } else { // < 4.0
+                score4 = 0.0;
+                letterGrade = 'F';
+                message = "Đừng nản lòng! Ai cũng có những lúc không như ý. Điều quan trọng là đứng dậy và tìm ra phương pháp học tập hiệu quả hơn. CLB luôn sẵn sàng hỗ trợ bạn."; // [cite: 38]
+            }
+            
+            // Bước 5: Hiển thị kết quả ra giao diện
+            resultArea.style.display = 'block'; // Hiện vùng kết quả lên
+            resultArea.innerHTML = `
+                <p><strong>Điểm hệ 10:</strong> ${score10}</p>
+                <p><strong>Điểm hệ 4:</strong> ${score4.toFixed(1)} (Điểm chữ: ${letterGrade})</p>
+                <p class="result-message">💌 ${message}</p>
+            `;
+        }
+    </script>
+
+</body>
+</html>
