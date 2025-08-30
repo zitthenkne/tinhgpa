@@ -12,10 +12,12 @@
             font-family: 'Be Vietnam Pro', sans-serif;
             background: linear-gradient(135deg, #005a9e 0%, #ff2d55 100%);
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            padding-bottom: 60px; /* Add padding to avoid footer overlap */
         }
 
         .container {
@@ -27,6 +29,7 @@
             max-width: 480px;
             text-align: center;
             position: relative;
+            margin-top: 20px;
         }
 
         h1 {
@@ -111,6 +114,14 @@
             box-shadow: 0 2px 12px rgba(255,45,85,0.12), 0 1px 4px rgba(0,90,158,0.10);
             border: 3px solid #ff2d55;
             background: white;
+        }
+        footer {
+            text-align: center;
+            color: white;
+            font-size: 14px;
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
         }
     </style>
 </head>
@@ -222,6 +233,8 @@
             `;
         }
     </script>
-
+    <footer>
+        <p>© zitthenk - Y23 - PRIT</p>
+    </footer>
 </body>
 </html>
